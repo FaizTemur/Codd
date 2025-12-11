@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Message for Areeba</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #ff4d8d;
+            --primary-light: #ff80ab;
+            --secondary: #ffb3d9;
+            --accent: #ff2d6f;
+            --dark: #8a1c4a;
+            --light: #fff5f9;
+            --paper: #fffaff;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        
+        body {
+            background: linear-gradient(135deg, 
+                #ffccd5 0%, 
+                #ffb7c5 25%, 
+                #ffd1dc 50%, 
+                #ffb3d9 75%, 
+                #ffccd5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            color: #5a1a3a;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated floral elements */
+        .floral-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .floral {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 77, 141, 0.15);
+            animation: float-floral 25s infinite linear;
+        }
+        
+        /* Main container */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            color: var(--dark);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInDown 1s forwards 0.3s;
+        }
+        
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            color: var(--accent);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            color: var(--dark);
+        }
+        
+        /* Modern Envelope */
+        .envelope-container {
+            perspective: 1500px;
+            cursor: pointer;
+            width: 480px;
+            height: 340px;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.8s;
+            filter: drop-shadow(0 20px 40px rgba(138, 28, 74, 0.2));
+        }
+        
+        .envelope {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transform-origin: center bottom;
+        }
+        
+        .envelope.open {
+            transform: rotateX(180deg) translateY(-50px);
+        }
+        
+        /* Front of envelope */
+        .envelope-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            background: linear-gradient(145deg, var(--primary), var(--accent));
+            box-shadow: 
+                0 30px 70px rgba(255, 45, 111, 0.4),
+                inset 0 -8px 20px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            z-index: 2;
+        }
+        
+        /* Envelope flap */
+        .envelope-flap {
+            position: absolute;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(145deg, var(--accent), var(--primary));
+            top: -5px;
+            left: 0;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -15px 30px rgba(0, 0, 0, 0.15);
+            z-index: 3;
+            clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+            transform-origin: top;
+            transition: transform 0.7s ease;
+        }
+        
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+        
+        /* Envelope seal */
+        .seal {
+            position: absolute;
+            bottom: 35px;
+            right: 35px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #ffeb3b, #ffc107);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            color: var(--accent);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            z-index: 4;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 4px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .seal:hover {
+            transform: scale(1.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Back of envelope */
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transform: rotateX(180deg);
+            border-radius: 20px;
+            background: linear-gradient(145deg, var(--light), #ffe6f2);
+            box-shadow: 
+                0 30px 70px rgba(0, 0, 0, 0.25),
+                inset 0 0 0 3px var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            overflow: hidden;
+        }
+        
+        .envelope-back::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 22px,
+                rgba(255, 77, 141, 0.05) 22px,
+                rgba(255, 77, 141, 0.05) 23px
+            );
+        }
+        
+        /* Envelope content */
+        .envelope-content {
+            text-align: center;
+            z-index: 1;
+        }
+        
+        .envelope-icon {
+            font-size: 70px;
+            color: white;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+        }
+        
+        .envelope-text {
+            font-size: 28px;
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .envelope-instruction {
+            font-size: 16px;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px 24px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 20px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Letter Container */
+        .letter-container {
+            position: absolute;
+            top: 0;
+            width: 95%;
+            max-width: 800px;
+            display: none;
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+            transition: var(--transition);
+            z-index: 10;
+        }
+        
+        .letter-container.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        /* Modern Letter */
+        .letter {
+            background: linear-gradient(to bottom, var(--paper), #fff5fc);
+            border-radius: 24px;
+            padding: 60px 50px;
+            box-shadow: 
+                0 50px 120px rgba(138, 28, 74, 0.3),
+                0 0 0 2px rgba(255, 255, 255, 0.1),
+                inset 0 0 50px rgba(255, 77, 141, 0.08);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .letter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--primary));
+            border-radius: 24px 24px 0 0;
+        }
+        
+        /* Letter content */
+        .letter-header {
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 25px;
+            text-align: center;
+        }
+        
+        .letter-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .to-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .letter-date {
+            color: var(--dark);
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+        
+        .letter-content {
+            font-size: 1.25rem;
+            line-height: 1.9;
+            color: #5a1a3a;
+            margin-bottom: 40px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .letter-content p {
+            margin-bottom: 28px;
+            text-align: justify;
+            padding: 0 10px;
+        }
+        
+        .signature {
+            text-align: right;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 77, 141, 0.2);
+        }
+        
+        .signature-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2rem;
+            color: var(--accent);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .signature-text {
+            color: var(--dark);
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+        
+        /* Close button */
+        .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(145deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+            box-shadow: 0 10px 25px rgba(255, 45, 111, 0.4);
+            z-index: 11;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+            background: linear-gradient(145deg, var(--accent), var(--primary));
+        }
+        
+        /* Music button */
+        .music-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 15px 35px rgba(255, 45, 111, 0.4);
+            transition: var(--transition);
+            z-index: 100;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .music-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 20px 45px rgba(255, 45, 111, 0.5);
+        }
+        
+        /* Decorative corner elements */
+        .corner {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            opacity: 0.6;
+        }
+        
+        .corner-tl {
+            top: 25px;
+            left: 25px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M20,20 L80,20 L80,30 L30,30 L30,80 L20,80 Z' fill='%23ff4d8d'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+        
+        .corner-br {
+            bottom: 25px;
+            right: 25px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M80,80 L20,80 L20,70 L70,70 L70,20 L80,20 Z' fill='%23ff4d8d'/%3E%3C/svg%3E");
+            background-size: contain;
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float-floral {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.2;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes sealPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 900px) {
+            .envelope-container {
+                width: 420px;
+                height: 300px;
+            }
+            
+            .envelope-flap {
+                height: 130px;
+            }
+            
+            .letter {
+                padding: 45px 35px;
+            }
+            
+            .to-name {
+                font-size: 3.5rem;
+            }
+            
+            .letter-content {
+                font-size: 1.15rem;
+            }
+            
+            .title {
+                font-size: 3.5rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .envelope-container {
+                width: 360px;
+                height: 260px;
+            }
+            
+            .envelope-flap {
+                height: 110px;
+            }
+            
+            .title {
+                font-size: 2.8rem;
+            }
+            
+            .to-name {
+                font-size: 3rem;
+            }
+            
+            .letter-content {
+                font-size: 1.05rem;
+                line-height: 1.8;
+            }
+            
+            .letter {
+                padding: 35px 25px;
+            }
+            
+            .signature-name {
+                font-size: 2.5rem;
+            }
+            
+            .envelope-text {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .envelope-container {
+                width: 320px;
+                height: 230px;
+            }
+            
+            .envelope-flap {
+                height: 95px;
+            }
+            
+            .title {
+                font-size: 2.4rem;
+            }
+            
+            .letter {
+                padding: 30px 20px;
+            }
+            
+            .envelope-text {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated floral elements -->
+    <div class="floral-elements" id="floralElements"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">For Areeba</h1>
+            <p class="subtitle">A Message for You</p>
+        </div>
+        
+        <!-- Modern Envelope -->
+        <div class="envelope-container" id="envelopeWrapper">
+            <div class="envelope" id="envelope">
+                <div class="envelope-flap"></div>
+                <div class="seal" id="seal">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="envelope-front">
+                    <div class="envelope-content">
+                        <div class="envelope-icon">💌</div>
+                        <h2 class="envelope-text">A Message</h2>
+                        <p style="color: rgba(255,255,255,0.9); margin-bottom: 10px; font-size: 1.1rem;">Click to open</p>
+                        <p class="envelope-instruction">Open me</p>
+                    </div>
+                </div>
+                <div class="envelope-back">
+                    <div class="envelope-content">
+                        <p style="font-size: 1.5rem; color: var(--dark); font-weight: 600; margin-bottom: 10px;">A message for you</p>
+                        <p style="color: var(--accent); font-size: 1rem; font-weight: 500;">From me to you</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modern Letter -->
+        <div class="letter-container" id="letterContainer">
+            <button class="close-btn" id="closeBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="letter">
+                <div class="corner corner-tl"></div>
+                <div class="corner corner-br"></div>
+                
+                <div class="letter-header">
+                    <h1 class="to-name">Areeba,</h1>
+                    <p class="letter-date">Just wanted to say</p>
+                </div>
+                
+                <div class="letter-content">
+                    <p>I care about you so much. Just seeing you makes my day better. Your smile has this incredible way of brightening everything around you, and I'm always here for you whenever you need me.</p>
+                    
+                    <p>I know you were sad today, and I wish I could take that away. Please remember that you're never alone in anything. Whether you need someone to talk to, a listening ear, or just someone to sit with you quietly, I'm here.</p>
+                    
+                    <p>You're such an amazing person, and you deserve all the happiness in the world. Even on tough days, I hope you know how much you mean to me and how much better my world is with you in it.</p>
+                    
+                    <p>Your presence alone makes everything feel a little lighter, a little brighter. Don't ever forget how special you are, and don't hesitate to reach out whenever you need anything at all.</p>
+                </div>
+                
+                <div class="signature">
+                    <div class="signature-name">Levi</div>
+                    <div class="signature-text">Always here for you</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Music button -->
+    <button class="music-btn" id="musicBtn">
+        <i class="fas fa-music" id="musicIcon"></i>
+    </button>
+    
+    <!-- Background music -->
+    <audio id="bgMusic" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-love-of-my-heart-117.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // DOM Elements
+        const envelopeWrapper = document.getElementById('envelopeWrapper');
+        const envelope = document.getElementById('envelope');
+        const seal = document.getElementById('seal');
+        const letterContainer = document.getElementById('letterContainer');
+        const closeBtn = document.getElementById('closeBtn');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+        const bgMusic = document.getElementById('bgMusic');
+        const floralElements = document.getElementById('floralElements');
+        
+        // Music state
+        let musicPlaying = false;
+        
+        // Create floating floral elements
+        function createFloralElements() {
+            const floralCount = 25;
+            const floralSymbols = ['❀', '✿', '❁', '🌸', '🏵️', '💮'];
+            
+            for (let i = 0; i < floralCount; i++) {
+                const floral = document.createElement('div');
+                floral.classList.add('floral');
+                floral.innerHTML = floralSymbols[Math.floor(Math.random() * floralSymbols.length)];
+                
+                // Random properties
+                const size = Math.random() * 30 + 20;
+                const left = Math.random() * 100;
+                const duration = Math.random() * 40 + 25;
+                const delay = Math.random() * 20;
+                const rotation = Math.random() * 360;
+                
+                floral.style.left = `${left}%`;
+                floral.style.fontSize = `${size}px`;
+                floral.style.animationDuration = `${duration}s`;
+                floral.style.animationDelay = `${delay}s`;
+                floral.style.transform = `rotate(${rotation}deg)`;
+                
+                floralElements.appendChild(floral);
+            }
+        }
+        
+        // Add pulse animation to seal
+        function addSealPulse() {
+            seal.style.animation = 'sealPulse 2s infinite';
+        }
+        
+        // Open envelope and show letter
+        function openLetter() {
+            // Play opening sound
+            const openSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-paper-whoosh-1093.mp3');
+            openSound.volume = 0.3;
+            openSound.play().catch(e => console.log("Audio play failed"));
+            
+            // Remove pulse from seal
+            seal.style.animation = 'none';
+            
+            // Open envelope
+            envelope.classList.add('open');
+            
+            // Hide seal with animation
+            seal.style.opacity = '0';
+            seal.style.transform = 'scale(0) rotate(180deg)';
+            
+            // Show letter after delay
+            setTimeout(() => {
+                letterContainer.classList.add('show');
+                
+                // Add gentle fade-in to letter content
+                const paragraphs = document.querySelectorAll('.letter-content p');
+                paragraphs.forEach((p, index) => {
+                    p.style.opacity = '0';
+                    p.style.transform = 'translateY(20px)';
+                    
+                    setTimeout(() => {
+                        p.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                        p.style.opacity = '1';
+                        p.style.transform = 'translateY(0)';
+                    }, 100 * index);
+                });
+            }, 800);
+        }
+        
+        // Close letter and envelope
+        function closeLetter() {
+            // Play closing sound
+            const closeSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-page-turn-single-1105.mp3');
+            closeSound.volume = 0.3;
+            closeSound.play().catch(e => console.log("Audio play failed"));
+            
+            // Hide letter
+            letterContainer.classList.remove('show');
+            
+            // Close envelope after delay
+            setTimeout(() => {
+                envelope.classList.remove('open');
+                
+                // Show seal again with animation
+                setTimeout(() => {
+                    seal.style.opacity = '1';
+                    seal.style.transform = 'scale(1) rotate(0deg)';
+                    seal.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    
+                    // Restart pulse animation
+                    setTimeout(() => {
+                        addSealPulse();
+                    }, 300);
+                }, 300);
+            }, 300);
+        }
+        
+        // Toggle background music
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicIcon.classList.remove('fa-pause');
+                musicIcon.classList.add('fa-music');
+                musicBtn.style.background = 'linear-gradient(145deg, var(--primary), var(--accent))';
+            } else {
+                bgMusic.play().catch(e => {
+                    console.log("Autoplay prevented. Please click the music button again.");
+                    musicIcon.classList.remove('fa-music');
+                    musicIcon.classList.add('fa-play');
+                });
+                musicIcon.classList.remove('fa-music', 'fa-play');
+                musicIcon.classList.add('fa-pause');
+                musicBtn.style.background = 'linear-gradient(145deg, var(--accent), var(--primary))';
+            }
+            musicPlaying = !musicPlaying;
+        }
+        
+        // Event Listeners
+        envelopeWrapper.addEventListener('click', openLetter);
+        seal.addEventListener('click', openLetter);
+        closeBtn.addEventListener('click', closeLetter);
+        musicBtn.addEventListener('click', toggleMusic);
+        
+        // Click anywhere outside letter to close it
+        document.addEventListener('click', function(event) {
+            const isClickInsideLetter = letterContainer.contains(event.target);
+            const isClickOnEnvelope = envelopeWrapper.contains(event.target);
+            const isClickOnCloseBtn = closeBtn.contains(event.target);
+            const isClickOnSeal = seal.contains(event.target);
+            
+            if (letterContainer.classList.contains('show') && 
+                !isClickInsideLetter && 
+                !isClickOnEnvelope && 
+                !isClickOnCloseBtn && 
+                !isClickOnSeal) {
+                closeLetter();
+            }
+        });
+        
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            createFloralElements();
+            addSealPulse();
+            
+            // Add keyboard controls
+            document.addEventListener('keydown', function(event) {
+                // Spacebar toggles letter
+                if (event.code === 'Space') {
+                    if (letterContainer.classList.contains('show')) {
+                        closeLetter();
+                    } else {
+                        openLetter();
+                    }
+                    event.preventDefault();
+                }
+                
+                // M key toggles music
+                if (event.code === 'KeyM') {
+                    toggleMusic();
+                }
+                
+                // Escape key closes letter
+                if (event.code === 'Escape' && letterContainer.classList.contains('show')) {
+                    closeLetter();
+                }
+            });
+        });
+        
+        // Add console message
+        console.log("%c💌 For Areeba 💌", "color: #ff4d8d; font-size: 22px; font-weight: bold; font-family: 'Dancing Script', cursive;");
+        console.log("%cA message from Levi", "color: #8a1c4a; font-size: 14px;");
+    </script>
+</body>
+</html>
